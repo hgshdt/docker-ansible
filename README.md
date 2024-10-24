@@ -1,10 +1,10 @@
-# Docker-Ansible Test Environment
+# Dockerized Ansible Testing Environment for Playbook Development
 
 This repository provides a Docker-based environment to test Ansible playbooks and configurations. It sets up a simple Ansible control node and two target nodes using Docker and Docker Compose.
 
 ## Prerequisites
 
-Ensure you have the following versions installed on your system:
+Ensure you have Docker and Docker Compose installed on your system:
 
 ```bash
 $ docker -v
@@ -129,6 +129,24 @@ PLAY RECAP *********************************************************************
 node01                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 node02                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0    
 ```
+
+### Example: Deploying Nginx
+
+The following example shows how to deploy Nginx on the target nodes using an Ansible playbook. 
+
+First, run a syntax check on the playbook to ensure there are no errors:
+
+```bash
+ansible:~/work# ansible-playbook nginx.yml --syntax-check
+```
+
+Then, execute the playbook to install Nginx, prompting for both SSH and sudo passwords:
+
+```bash
+ansible:~/work# ansible-playbook nginx.yml -k --ask-become-pass
+```
+
+Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8101` and `http://localhost:8102`.
 
 ## Troubleshooting
 
