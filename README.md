@@ -1,50 +1,77 @@
-# docker-ansible
+# Docker-Ansible Test Environment
 
-## Environment
+This repository provides a Docker-based environment to test Ansible playbooks and configurations. It sets up a simple Ansible control node and two target nodes using Docker and Docker Compose.
 
-```sh
+## Prerequisites
+
+Ensure you have the following versions installed on your system:
+
+```bash
 $ docker -v
 Docker version 27.2.1, build 9e34c9bb39
 $ docker compose version
 Docker Compose version 2.29.5
 ```
 
-## Build
+## Getting Started
 
-```sh
+### 1. Build the Docker Environment
+
+To build the environment from scratch, run the following command:
+
+```bash
 $ docker compose build --no-cache
 ```
 
-## Run
+This will create the Ansible control node (`ansible`) and target nodes (`node01` and `node02`).
 
-```sh
-$ docker-compose up -d
+### 2. Start the Docker Containers
+
+Once the build is complete, start the containers in detached mode:
+
+```bash
+$ docker compose up -d
 ```
 
-## Check node
+### 3. Verify Node Configuration
 
-```sh
+To verify the configuration of `node01`, you can access it using the following command:
+
+```bash
 $ docker exec -it node01 /bin/bash
-# cat /etc/ssh/sshd_config
-...
-PermitRootLogin yes
-PasswordAuthentication no
-AuthorizedKeysFile /root/.ssh/authorized_keys
-PubkeyAuthentication yes
-# cat /etc/hosts
-...
-172.19.0.4	ansible
-172.19.0.3	node01
-172.19.0.2	node02
-# cat /root/.ssh/authorized_keys
-ecdsa-sha2-nistp521 ...
 ```
 
-## Run Ansible
+From the node, check important files like SSH configuration, hosts, and authorized keys:
 
-```sh
+```bash
+root@node01:/# cat /etc/ssh/sshd_config
+root@node01:/# cat /etc/hosts
+root@node01:/# cat /root/.ssh/authorized_keys
+```
+
+### 4. Run Ansible Commands
+
+Access the Ansible control node:
+
+```bash
 $ docker exec -it ansible /bin/bash
-# ansible node -m ping
+```
+
+Check the Ansible version installed:
+
+```bash
+ansible:~/work# ansible --version
+```
+
+You can now use Ansible to ping the target nodes and ensure they are reachable:
+
+```bash
+ansible:~/work# ansible node -m ping
+```
+
+You should see successful pings from both `node01` and `node02`:
+
+```bash
 node02 | SUCCESS => {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python3.12"
@@ -59,18 +86,55 @@ node01 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
-# ansible-playbook playbook.yml
-PLAY [node] ************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] *************************************************************************************************************************************************************
-ok: [node01]
-ok: [node02]
-
-TASK [Test connection to target nodes] *********************************************************************************************************************************************
-ok: [node01]
-ok: [node02]
-
-PLAY RECAP *************************************************************************************************************************************************************************
-node01                     : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-node02                     : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 ```
+
+### 5. Execute a Playbook
+
+To run an Ansible playbook (e.g., `ping.yml`), use the following command:
+
+```bash
+ansible:~/work# ansible-playbook ping.yml
+```
+
+Expected output will confirm the connection to the nodes and the results of the tasks:
+
+```plaintext
+PLAY [node] *********************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************
+ok: [node02]
+ok: [node01]
+
+TASK [Test connection to target nodes] ******************************************************************************
+ok: [node01]
+ok: [node02]
+
+TASK [debug] ********************************************************************************************************
+ok: [node01] => {
+    "msg": {
+        "changed": false,
+        "failed": false,
+        "ping": "pong"
+    }
+}
+ok: [node02] => {
+    "msg": {
+        "changed": false,
+        "failed": false,
+        "ping": "pong"
+    }
+}
+
+PLAY RECAP **********************************************************************************************************
+node01                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node02                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0    
+```
+
+## Troubleshooting
+
+- If the nodes are unreachable, ensure the Docker containers are running by checking with `docker ps`.
+- Ensure the network settings allow communication between the Ansible control node and the target nodes.
+
+## Conclusion
+
+This setup allows you to quickly create a testing environment for Ansible using Docker. You can modify the `Dockerfile` or `docker-compose.yml` as needed to customize the setup for your playbooks and environments.

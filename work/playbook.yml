@@ -1,5 +1,0 @@
----
-- hosts: node
-  tasks:
-    - name: Test connection to target nodes
-      ping:

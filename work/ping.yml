@@ -1,0 +1,10 @@
+---
+- hosts: node
+  tasks:
+    - name: Test connection to target nodes
+      ping:
+      register: result
+
+    - name: debug
+      debug: 
+        msg: "{{ result }}"
