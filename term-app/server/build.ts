@@ -1,9 +1,8 @@
-import { build, BuildOptions, context } from 'esbuild';
+import { type BuildOptions, build, context } from 'esbuild';
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 console.log(`NODE_ENV: ${NODE_ENV}`);
 const isDev = NODE_ENV === 'development';
-const _watch = process.env.WATCH === 'true' || false;
 
 const define: BuildOptions['define'] = {
   'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
@@ -18,6 +17,7 @@ const common: BuildOptions = {
   minify: !isDev,
   sourcemap: isDev,
   define,
+  loader: { '.node': 'file' },
 };
 
 const main: BuildOptions = {

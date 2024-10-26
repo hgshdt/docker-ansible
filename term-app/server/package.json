@@ -1,0 +1,31 @@
+{
+  "name": "term-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "update": "npx npm-check-updates",
+    "check": "biome check .",
+    "build": "tsc --noEmit && node --require esbuild-register build.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.1",
+    "@types/ws": "^8.5.12",
+    "esbuild": "^0.24.0",
+    "esbuild-register": "^3.6.0",
+    "fs": "^0.0.1-security",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "http": "^0.0.1-security",
+    "node-pty": "^1.0.0",
+    "ws": "^8.18.0"
+  }
+}
