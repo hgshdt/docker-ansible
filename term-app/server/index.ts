@@ -6,10 +6,10 @@ import WebSocket from 'ws';
 const app = express();
 const server = new http.Server(app);
 
-let staticDir = './public';
-if (process.env.NODE_ENV === 'development') {
-  staticDir = '../dist';
-}
+const staticDir = './public';
+// if (process.env.NODE_ENV === 'development') {
+//   staticDir = '../dist';
+// }
 
 app.use('/', express.static(staticDir));
 const wss = new WebSocket.Server({ server });
