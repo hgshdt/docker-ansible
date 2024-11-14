@@ -8,8 +8,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 
 WORKDIR /app
 
-COPY ../term-app/dist .
-RUN npm install
+COPY ./webshell /app
+RUN npm install \
+    && npm run build
 
 RUN mkdir -p /root/.ssh/ \
     && touch /root/.ssh/authorized_keys \
@@ -24,9 +25,9 @@ RUN mkdir -p /run/sshd
 
 RUN echo 'root:node' | chpasswd
 
-EXPOSE 22
+EXPOSE 22 80 8999
 
 RUN mkdir -p /etc/supervisor/conf.d/
-COPY ../supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

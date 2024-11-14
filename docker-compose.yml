@@ -27,7 +27,7 @@ services:
     ports:
       - '8101:80'
       - '2201:22'
-    command: ["/usr/sbin/sshd", "-D"]
+      - '8991:8999'
     networks:
       - mynet
 
@@ -38,7 +38,7 @@ services:
     ports:
       - '8102:80'
       - '2202:22'
-    command: ["/usr/sbin/sshd", "-D"]
+      - '8992:8999'
     networks:
       - mynet
 
