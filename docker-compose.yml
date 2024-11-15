@@ -1,5 +1,7 @@
 x-node: &node
-  build: ./target-node
+  build:
+    dockerfile: ./target-node/Dockerfile
+    context: .
   privileged: true
   tty: true
   networks:
@@ -25,9 +27,14 @@ services:
     hostname: node01
     container_name: node01
     ports:
-      - '8101:80'
+      - '8001:80'
       - '2201:22'
       - '8991:8999'
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - mynet
 
@@ -36,9 +43,14 @@ services:
     hostname: node02
     container_name: node02
     ports:
-      - '8102:80'
+      - '8002:80'
       - '2202:22'
       - '8992:8999'
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - mynet
 

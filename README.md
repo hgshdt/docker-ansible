@@ -45,6 +45,7 @@ From the node, check important files like SSH configuration, hosts, and authoriz
 
 ```bash
 root@node01:/# ps aux | grep sshd
+root@node01:/# ps aux | grep node
 root@node01:/# cat /etc/ssh/sshd_config
 root@node01:/# cat /etc/hosts
 root@node01:/# cat /root/.ssh/authorized_keys

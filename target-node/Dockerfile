@@ -28,6 +28,6 @@ RUN echo 'root:node' | chpasswd
 EXPOSE 22 80 8999
 
 RUN mkdir -p /etc/supervisor/conf.d/
-COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./target-node/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
