@@ -10,6 +10,11 @@ WORKDIR /app
 
 COPY ./webshell /app
 RUN npm install \
+    && { \
+        echo 'NODE_ENV=production'; \
+        echo 'WS_URL=0.0.0.0'; \
+        echo 'WS_PORT=8991'; \
+    } > /app/.env.production \
     && npm run build
 
 RUN mkdir -p /root/.ssh/ \

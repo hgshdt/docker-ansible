@@ -30,11 +30,6 @@ services:
       - '8001:80'
       - '2201:22'
       - '8991:8999'
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "22"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
     networks:
       - mynet
 
@@ -46,11 +41,6 @@ services:
       - '8002:80'
       - '2202:22'
       - '8992:8999'
-    healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "22"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
     networks:
       - mynet
 
