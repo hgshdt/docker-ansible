@@ -41,6 +41,10 @@ To verify the configuration of `node01`, you can access it using the following c
 $ docker exec -it node01 /bin/bash
 ```
 
+```bash
+$ docker exec -it node01 netstat -tuln
+```
+
 From the node, check important files like SSH configuration, hosts, and authorized keys:
 
 ```bash

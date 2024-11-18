@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-RUN apt update && apt install -y openssh-server sudo
+RUN apt update && apt install -y openssh-server sudo net-tools
 
 RUN apt install -y curl supervisor
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
