@@ -9,11 +9,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 WORKDIR /app
 
 COPY ./webshell /app
+
+ARG WS_PORT=8999
 RUN npm install \
     && { \
         echo 'NODE_ENV=production'; \
-        echo 'WS_URL=0.0.0.0'; \
-        echo 'WS_PORT=8999'; \
+        echo 'WS_URL=localhost'; \
+        echo "WS_PORT=${WS_PORT}"; \
     } > /app/.env.production \
     && npm run build
 

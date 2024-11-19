@@ -30,6 +30,11 @@ services:
       - '8001:80'
       - '2201:22'
       - '8991:8999'
+    build:
+      dockerfile: ./target-node/Dockerfile
+      context: .
+      args:
+        WS_PORT: 8991
     networks:
       - mynet
 
@@ -41,6 +46,11 @@ services:
       - '8002:80'
       - '2202:22'
       - '8992:8999'
+    build:
+      dockerfile: ./target-node/Dockerfile
+      context: .
+      args:
+        WS_PORT: 8992
     networks:
       - mynet
 
