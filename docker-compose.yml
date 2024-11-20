@@ -11,12 +11,17 @@ services:
   ansible:
     container_name: ansible
     hostname: ansible
+    ports:
+      - '8990:8999'
     depends_on:
       - node01
       - node02
-    build: ./control-node
+    build:
+      dockerfile: ./control-node/Dockerfile
+      context: .
+      args:
+        WS_PORT: 8990
     tty: true
-    working_dir: /root/work
     volumes:
       - ./work:/root/work
     networks:
@@ -35,8 +40,6 @@ services:
       context: .
       args:
         WS_PORT: 8991
-    networks:
-      - mynet
 
   node02:
     <<: *node
@@ -51,8 +54,6 @@ services:
       context: .
       args:
         WS_PORT: 8992
-    networks:
-      - mynet
 
 networks:
   mynet:

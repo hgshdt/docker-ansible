@@ -154,6 +154,10 @@ ansible:~/work# ansible-playbook nginx.yml -k --ask-become-pass
 
 Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8101` and `http://localhost:8102`.
 
+## Using webshell
+
+The control node can also be connected to by accessing `http://localhost:8990/` from a browser.
+
 ## Troubleshooting
 
 - If the nodes are unreachable, ensure the Docker containers are running by checking with `docker ps`.

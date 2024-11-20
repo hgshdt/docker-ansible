@@ -1,15 +1,11 @@
 FROM ubuntu:24.04
 
-RUN apt update && apt install -y openssh-server sudo net-tools
-
-RUN apt install -y curl supervisor
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+RUN apt update && apt install -y openssh-server sudo net-tools curl supervisor \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt install -y nodejs
 
 WORKDIR /app
-
 COPY ./webshell /app
-
 ARG WS_PORT=8999
 RUN npm install \
     && { \
