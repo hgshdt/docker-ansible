@@ -63,7 +63,7 @@ Access the Ansible control node:
 $ docker exec -it ansible /bin/bash
 ```
 
-The control node is accessible via a web browser at `http://localhost:8990/`.
+The control node is also accessible via a web browser at `http://localhost:8990/`.
 
 Check the Ansible version installed:
 
