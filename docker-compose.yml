@@ -25,7 +25,9 @@ services:
     volumes:
       - ./work:/root/work
     networks:
-      - mynet
+      mynet:
+        ipv4_address: 10.0.0.40
+      # - mynet
 
   node01:
     <<: *node
@@ -34,12 +36,12 @@ services:
     ports:
       - '8001:80'
       - '2201:22'
-      - '8991:8999'
-    build:
-      dockerfile: ./target-node/Dockerfile
-      context: .
-      args:
-        WS_PORT: 8991
+    #   - '8991:8999'
+    # build:
+    #   dockerfile: ./target-node/Dockerfile
+    #   context: .
+    #   args:
+    #     WS_PORT: 8991
 
   node02:
     <<: *node
@@ -48,13 +50,16 @@ services:
     ports:
       - '8002:80'
       - '2202:22'
-      - '8992:8999'
-    build:
-      dockerfile: ./target-node/Dockerfile
-      context: .
-      args:
-        WS_PORT: 8992
+    #   - '8992:8999'
+    # build:
+    #   dockerfile: ./target-node/Dockerfile
+    #   context: .
+    #   args:
+    #     WS_PORT: 8992
 
 networks:
   mynet:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16

@@ -63,6 +63,8 @@ Access the Ansible control node:
 $ docker exec -it ansible /bin/bash
 ```
 
+The control node is accessible via a web browser at `http://localhost:8990/`.
+
 Check the Ansible version installed:
 
 ```bash
@@ -152,11 +154,7 @@ Then, execute the playbook to install Nginx, prompting for both SSH and sudo pas
 ansible:~/work# ansible-playbook nginx.yml -k --ask-become-pass
 ```
 
-Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8101` and `http://localhost:8102`.
-
-## Using webshell
-
-The control node can also be connected to by accessing `http://localhost:8990/` from a browser.
+Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8001` and `http://localhost:8002`.
 
 ## Troubleshooting
 

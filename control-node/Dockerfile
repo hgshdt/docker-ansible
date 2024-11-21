@@ -1,10 +1,8 @@
-# FROM alpine:3.20
 FROM ubuntu:24.04
 
 ENV ANSIBLE_PYTHON_INTERPRETER=auto_silent
 
-# RUN apk add --no-cache openssh-client ansible sshpass bash curl nodejs npm
-RUN apt update && apt install -y openssh-client ansible sshpass curl net-tools netcat-traditional \
+RUN apt update && apt install -y openssh-client ansible sshpass curl net-tools netcat-traditional supervisor \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt install -y nodejs
 
@@ -29,8 +27,14 @@ ADD ./control-node/ansible.cfg /etc/ansible
 ADD ./control-node/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 80 8999
+EXPOSE 8999
 
 ENTRYPOINT ["/entrypoint.sh"]
+
 # CMD ["/bin/bash"]
-CMD ["node", "/app/build/main.js"]
+# CMD ["node", "/app/build/main.js"]
+
+RUN mkdir -p /etc/supervisor/conf.d/
+COPY ./control-node/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
