@@ -1,4 +1,4 @@
-# Dockerized Ansible Testing Environment for Playbook Development
+# Dockerized Ansible Testing Lab for Playbook Development
 
 This repository provides a Docker-based environment to test Ansible playbooks and configurations. It sets up a simple Ansible control node and two target nodes using Docker and Docker Compose.
 
@@ -8,9 +8,9 @@ Ensure you have Docker and Docker Compose installed on your system:
 
 ```bash
 $ docker -v
-Docker version 27.2.1, build 9e34c9bb39
+Docker version 27.3.1, build ce12230
 $ docker compose version
-Docker Compose version 2.29.5
+Docker Compose version 2.29.7
 ```
 
 ## Getting Started
@@ -41,11 +41,21 @@ To verify the configuration of `node01`, you can access it using the following c
 $ docker exec -it node01 /bin/bash
 ```
 
+```bash
+$ docker exec -it node01 netstat -tuln
+```
+
+On browser:
+
+```bash
+$ ssh root@node01
+```
+
 From the node, check important files like SSH configuration, hosts, and authorized keys:
 
 ```bash
+root@node01:/# ps aux | grep sshd
 root@node01:/# cat /etc/ssh/sshd_config
-root@node01:/# cat /etc/hosts
 root@node01:/# cat /root/.ssh/authorized_keys
 ```
 
@@ -56,6 +66,8 @@ Access the Ansible control node:
 ```bash
 $ docker exec -it ansible /bin/bash
 ```
+
+The control node is also accessible via a web browser at `http://localhost:8990/`.
 
 Check the Ansible version installed:
 
@@ -146,7 +158,7 @@ Then, execute the playbook to install Nginx, prompting for both SSH and sudo pas
 ansible:~/work# ansible-playbook nginx.yml -k --ask-become-pass
 ```
 
-Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8101` and `http://localhost:8102`.
+Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8001` and `http://localhost:8002`.
 
 ## Troubleshooting
 

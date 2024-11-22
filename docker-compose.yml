@@ -1,47 +1,67 @@
 x-node: &node
-  build: ./target-node
+  build:
+    dockerfile: ./target-node/Dockerfile
+    context: .
   privileged: true
   tty: true
   networks:
     - mynet
+  extra_hosts:
+    - "ntp:10.0.1.40"
 
 services:
+  ntp:
+    image: dockurr/chrony
+    container_name: ntp
+    environment:
+      NTP_SERVERS: "time.cloudflare.com"
+    ports:
+      - 123:123/udp
+    networks:
+      mynet:
+        ipv4_address: 10.0.1.40
+  
   ansible:
     container_name: ansible
     hostname: ansible
+    ports:
+      - '8990:8999'
     depends_on:
       - node01
       - node02
-    build: ./control-node
+    build:
+      dockerfile: ./control-node/Dockerfile
+      context: .
+      args:
+        WS_PORT: 8990
     tty: true
-    working_dir: /root/work
     volumes:
       - ./work:/root/work
     networks:
-      - mynet
+      mynet:
+        ipv4_address: 10.0.0.40
+    extra_hosts:
+      - "ntp:10.0.1.40"
 
   node01:
     <<: *node
     hostname: node01
     container_name: node01
     ports:
-      - '8101:80'
+      - '8001:80'
       - '2201:22'
-    command: ["/usr/sbin/sshd", "-D"]
-    networks:
-      - mynet
 
   node02:
     <<: *node
     hostname: node02
     container_name: node02
     ports:
-      - '8102:80'
+      - '8002:80'
       - '2202:22'
-    command: ["/usr/sbin/sshd", "-D"]
-    networks:
-      - mynet
 
 networks:
   mynet:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
