@@ -1,4 +1,4 @@
-# Dockerized Ansible Testing Environment for Playbook Development
+# Dockerized Ansible Testing Lab for Playbook Development
 
 This repository provides a Docker-based environment to test Ansible playbooks and configurations. It sets up a simple Ansible control node and two target nodes using Docker and Docker Compose.
 
@@ -8,9 +8,9 @@ Ensure you have Docker and Docker Compose installed on your system:
 
 ```bash
 $ docker -v
-Docker version 27.2.1, build 9e34c9bb39
+Docker version 27.3.1, build ce12230
 $ docker compose version
-Docker Compose version 2.29.5
+Docker Compose version 2.29.7
 ```
 
 ## Getting Started
@@ -49,7 +49,6 @@ From the node, check important files like SSH configuration, hosts, and authoriz
 
 ```bash
 root@node01:/# ps aux | grep sshd
-root@node01:/# ps aux | grep node
 root@node01:/# cat /etc/ssh/sshd_config
 root@node01:/# cat /etc/hosts
 root@node01:/# cat /root/.ssh/authorized_keys

@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "update": "npx npm-check-updates",
+    "clean": "rimraf build",
+    "copy:html": "node -e \"require('fs').cpSync('./client/index.html', './build/index.html')\"",
+    "copy:css": "node -e \"require('fs').cpSync('./node_modules/xterm/css/xterm.css', './build/xterm.css')\"",
+    "setup": "npm run clean && npm run copy:html && npm run copy:css",
+    "build:client": "cd client && node --env-file=../.env.production --require esbuild-register build.ts",
+    "build:server": "cd server && node --env-file=../.env.production --require esbuild-register build.ts",
+    "dev:client": "cd client && node --env-file=../.env.development --require esbuild-register build.ts",
+    "dev:server": "cd server && node --env-file=../.env.development --require esbuild-register build.ts",
+    "build": "npm run setup && npm run build:client && npm run build:server",
+    "dev": "npm run setup && npm run dev:client && npm run dev:server",
+    "serve": "node build/main.js"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-search": "^0.15.0",
+    "@xterm/addon-serialize": "^0.13.0",
+    "@xterm/addon-unicode11": "^0.8.0",
+    "@xterm/addon-web-links": "^0.11.0",
+    "express": "^4.21.1",
+    "node-pty": "^1.0.0",
+    "ws": "^8.18.0",
+    "xterm": "^5.3.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/ws": "^8.5.13",
+    "esbuild": "^0.24.0",
+    "esbuild-register": "^3.6.0",
+    "fs": "^0.0.1-security",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  }
+}
