@@ -36,7 +36,7 @@ services:
         WS_PORT: 8990
     tty: true
     volumes:
-      - ./work:/root/work
+      - ./work:/app/work
     networks:
       mynet:
         ipv4_address: 10.0.0.40

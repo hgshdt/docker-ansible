@@ -1,0 +1,10 @@
+---
+nodes:
+  hosts:
+    node01:
+      ansible_host: node01
+      ansible_port: 22
+    node02:
+      ansible_host: node02
+      ansible_port: 22
+...

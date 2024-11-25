@@ -1,0 +1,4 @@
+- name: ping
+  hosts: nodes
+  roles:
+    - common
