@@ -1,7 +1,6 @@
-- name: Test connection to target nodes
-  ping:
+- name: Ping connection
+  ansible.builtin.ping:
   register: result
 
-- name: debug
-  debug: 
-    msg: "{{ result }}"
+- debug: 
+    var: result

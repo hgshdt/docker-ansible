@@ -1,0 +1,40 @@
+- name: Install chrony
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - chrony
+
+- name: Configure Chrony to use the central NTP server
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: "^server"
+    line: "server {{ chrony_server }} iburst"
+    state: present
+    create: yes
+
+- name: Restart Chrony service to apply changes
+  service:
+    name: chronyd
+    state: restarted
+    enabled: true
+  notify:
+    - Restart Chrony
+
+- name: Check NTP server reachability
+  command: "chronyc sources"
+  register: ntp_sources
+  # failed_when: "'^?' in ntp_sources.stdout"
+  changed_when: false
+
+- debug:
+    var: ntp_sources.stdout
+
+- name: Ensure time is synchronized
+  command: "chronyc makestep"
+  register: sync_result
+  changed_when: "'adjustment' in sync_result.stdout"
+  failed_when: "'failed' in sync_result.stdout"
+
+- debug:
+    var: sync_result

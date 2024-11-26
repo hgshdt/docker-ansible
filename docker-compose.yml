@@ -3,6 +3,14 @@ x-node: &node
     dockerfile: ./target-node/Dockerfile
     context: .
   privileged: true
+  # volumes:
+  #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #   - /sys/fs/cgroup/cpu:/sys/fs/cgroup/cpu:ro
+  #   - /sys/fs/cgroup/cpuacct:/sys/fs/cgroup/cpuacct:ro
+  #   - /sys/fs/cgroup/net_prio:/sys/fs/cgroup/net_prio:ro
+  #   - /sys/fs/cgroup/net_cls:/sys/fs/cgroup/net_cls:ro
+  #   - /run:/run:rw
+  #   - /run/lock:/run/lock:rw
   tty: true
   networks:
     - mynet
