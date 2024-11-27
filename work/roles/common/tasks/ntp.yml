@@ -24,7 +24,7 @@
 - name: Check NTP server reachability
   command: "chronyc sources"
   register: ntp_sources
-  # failed_when: "'^?' in ntp_sources.stdout"
+  failed_when: "'^?' in ntp_sources.stdout"
   changed_when: false
 
 - debug:

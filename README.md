@@ -106,7 +106,13 @@ To run an Ansible playbook (e.g., `ping.yml`), use the following command:
 
 
 ```bash
-# ansible-playbook -i work/inventory/dev/inventory.yml work/play-check.yml
+# cd work
+# ansible-playbook -i inventory/dev/inventory.yml play-check.yml
+```
+
+```bash
+# docker exec -it ntp chronyc sources
+node01# chronyc -h 10.0.1.40 -p 123 makestep
 ```
 
 ### Example: Deploying Nginx

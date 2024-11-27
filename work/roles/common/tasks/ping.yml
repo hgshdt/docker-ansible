@@ -1,5 +1,5 @@
 - name: Ping connection
-  ansible.builtin.ping:
+  ping:
   register: result
 
 - debug: 
