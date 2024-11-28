@@ -5,13 +5,13 @@
   loop:
     - chrony
 
-- name: Configure Chrony to use the central NTP server
-  lineinfile:
-    path: /etc/chrony/chrony.conf
-    regexp: "^server"
-    line: "server {{ chrony_server }} iburst"
-    state: present
-    create: yes
+- name: Set /etc/chrony/chrony.conf
+  template:
+    src: etc_chrony.conf.j2
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Restart Chrony service to apply changes
   service:

@@ -1,0 +1,4 @@
+---
+ansible_host: node01
+ansible_port: 22
+...

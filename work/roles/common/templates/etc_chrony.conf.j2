@@ -1,0 +1,5 @@
+server {{ chrony_server }} iburst
+driftfile /var/lib/chrony/driftfile
+makestep 0.1 3
+rtcsync
+logdir /var/log/chrony
