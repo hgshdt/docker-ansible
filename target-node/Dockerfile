@@ -1,8 +1,9 @@
 FROM ubuntu:24.04
 
 RUN apt update \
-    && apt install -y openssh-server systemd \
+    && apt install -y openssh-server \
     && apt clean
+# systemd
 
 RUN mkdir -p /root/.ssh/ \
     && touch /root/.ssh/authorized_keys \
@@ -19,7 +20,9 @@ RUN echo 'root:node' | chpasswd
 
 EXPOSE 22 80 
 
-COPY ./target-node/setup-services.sh /usr/local/bin/setup-services.sh
-RUN chmod +x /usr/local/bin/setup-services.sh
+CMD ["/usr/sbin/sshd", "-D"]
 
-CMD ["/sbin/init"]
+# COPY ./target-node/setup-services.sh /usr/local/bin/setup-services.sh
+# RUN chmod +x /usr/local/bin/setup-services.sh
+
+# CMD ["/sbin/init"]
