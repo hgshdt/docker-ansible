@@ -1,0 +1,26 @@
+---
+- name: Install Nginx and update package cache
+  package:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Deploy custom index.html
+  template:
+    src: templates/index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0644'
+  notify: 
+  - Restart Nginx
+
+- name: Restart Nginx to apply changes
+  service:
+    name: nginx
+    state: restarted
+...

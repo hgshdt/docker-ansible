@@ -1,3 +1,4 @@
+---
 - name: Install chrony
   package:
     name: "{{ item }}"
@@ -38,3 +39,4 @@
 
 - debug:
     var: sync_result
+...

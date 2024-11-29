@@ -1,6 +1,7 @@
 ---
-- name: Common tasks
+- name: Setup Nginx
   hosts: nodes
   roles:
     - common
+    - web
 ...
