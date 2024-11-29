@@ -1,3 +1,4 @@
+---
 - name: Ping host
   ping:
   register: ping_result
@@ -18,3 +19,4 @@
       [IP: {{ ip_result.stdout }}]
       [Ping: {% if ping_result.failed == false %}Sucessfully pinged host{% else %}Failed to ping host{% endif %}]
   failed_when: ping.result.failed is true
+...

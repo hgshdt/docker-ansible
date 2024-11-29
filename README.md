@@ -104,7 +104,6 @@ node01 | SUCCESS => {
 
 To run an Ansible playbook (e.g., `ping.yml`), use the following command:
 
-
 ```bash
 # cd work
 # ansible-playbook -i inventory/dev/inventory.yml play_check.yml
@@ -114,16 +113,9 @@ To run an Ansible playbook (e.g., `ping.yml`), use the following command:
 
 The following example shows how to deploy Nginx on the target nodes using an Ansible playbook. 
 
-First, run a syntax check on the playbook to ensure there are no errors:
-
 ```bash
-ansible:~/work# ansible-playbook nginx.yml --syntax-check
-```
-
-Then, execute the playbook to install Nginx, prompting for both SSH and sudo passwords:
-
-```bash
-ansible:~/work# ansible-playbook nginx.yml -k --ask-become-pass
+# cd work
+# ansible-playbook -i inventory/dev/inventory.yml play_web.yml
 ```
 
 Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8001` and `http://localhost:8002`.
