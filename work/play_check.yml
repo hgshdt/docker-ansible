@@ -1,4 +1,4 @@
-- name: ping
+- name: Common tasks
   hosts: nodes
   roles:
     - common

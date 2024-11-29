@@ -1,0 +1,40 @@
+- name: Install chrony
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - chrony
+
+- name: Set /etc/chrony/chrony.conf
+  template:
+    src: etc_chrony.conf.j2
+    dest: /etc/chrony/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart Chrony service to apply changes
+  service:
+    name: chronyd
+    state: restarted
+    enabled: true
+  notify:
+    - Restart Chrony
+
+- name: Check NTP server reachability
+  command: "chronyc sources"
+  register: ntp_sources
+  failed_when: "'^?' in ntp_sources.stdout"
+  changed_when: false
+
+- debug:
+    var: ntp_sources.stdout
+
+- name: Ensure time is synchronized
+  command: "chronyc makestep"
+  register: sync_result
+  changed_when: "'adjustment' in sync_result.stdout"
+  failed_when: "'failed' in sync_result.stdout"
+
+- debug:
+    var: sync_result

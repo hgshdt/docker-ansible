@@ -106,41 +106,8 @@ To run an Ansible playbook (e.g., `ping.yml`), use the following command:
 
 
 ```bash
-work# ansible-playbook -i inventory/dev/inventory.yml play-check.yml
-```
-
-Expected output will confirm the connection to the nodes and the results of the tasks:
-
-```plaintext
-PLAY [ping] *************************************************************************************************************************************************************************************************************************************
-
-TASK [Gathering Facts] **************************************************************************************************************************************************************************************************************************
-ok: [node02]
-ok: [node01]
-
-TASK [common : Test connection to target nodes] *************************************************************************************************************************************************************************************************
-ok: [node02]
-ok: [node01]
-
-TASK [common : debug] ***************************************************************************************************************************************************************************************************************************
-ok: [node01] => {
-    "msg": {
-        "changed": false,
-        "failed": false,
-        "ping": "pong"
-    }
-}
-ok: [node02] => {
-    "msg": {
-        "changed": false,
-        "failed": false,
-        "ping": "pong"
-    }
-}
-
-PLAY RECAP **************************************************************************************************************************************************************************************************************************************
-node01                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-node02                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+# cd work
+# ansible-playbook -i inventory/dev/inventory.yml play_check.yml
 ```
 
 ### Example: Deploying Nginx

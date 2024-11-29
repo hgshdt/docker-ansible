@@ -6,20 +6,23 @@ x-node: &node
   tty: true
   networks:
     - mynet
-  extra_hosts:
-    - "ntp:10.0.1.40"
+  # extra_hosts:
+  #   - "ntp:10.0.1.40"
 
 services:
-  ntp:
-    image: dockurr/chrony
-    container_name: ntp
-    environment:
-      NTP_SERVERS: "time.cloudflare.com"
-    ports:
-      - 123:123/udp
-    networks:
-      mynet:
-        ipv4_address: 10.0.1.40
+  # ntp:
+  #   image: dockurr/chrony
+  #   container_name: ntp
+  #   environment:
+  #     NTP_SERVERS: "time.cloudflare.com"
+  #     ENABLE_SYSCLK: "true"
+  #   ports:
+  #     - 123:123/udp
+  #   cap_add:
+  #     - SYS_TIME
+  #   networks:
+  #     mynet:
+  #       ipv4_address: 10.0.1.40
   
   ansible:
     container_name: ansible
@@ -40,8 +43,8 @@ services:
     networks:
       mynet:
         ipv4_address: 10.0.0.40
-    extra_hosts:
-      - "ntp:10.0.1.40"
+    # extra_hosts:
+    #   - "ntp:10.0.1.40"
 
   node01:
     <<: *node
