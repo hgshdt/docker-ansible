@@ -3,4 +3,8 @@ nodes:
   hosts:
     node01:
     node02:
+
+proxy:
+  hosts:
+    reverse_proxy:
 ...

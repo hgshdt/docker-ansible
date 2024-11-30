@@ -1,0 +1,63 @@
+---
+- name: Ensure required packages are installed
+  package:
+    name:
+      - nginx
+      - openssl
+    state: present
+    update_cache: true
+
+- name: Create directory for SSL certificates
+  file:
+    path: "{{ nginx_cert_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Generate self-signed certificate
+  command: >
+    openssl req -new -newkey rsa:2048 -days 365 -nodes -x509
+    -subj "/C=JP/ST=Tokyo/L=Tokyo/O=YourCompany/CN={{ inventory_hostname }}"
+    -keyout {{ nginx_cert_path }}/nginx.key
+    -out {{ nginx_cert_path }}/nginx.crt
+  args:
+    creates: "{{ nginx_cert_path }}/nginx.crt"
+  notify: Restart Nginx
+
+- name: Collect backend node IP addresses
+  set_fact:
+    backend_ips: "{{ backend_ips | default([]) + [hostvars[item].ansible_facts.default_ipv4.address] }}"
+  loop: "{{ backend_nodes }}"
+  when: "'ansible_facts' in hostvars[item]"
+
+- name: Debug backend IPs
+  debug:
+    var: backend_ips
+
+- name: Render NGINX reverse proxy configuration
+  template:
+    src: templates/reverse_proxy.j2
+    dest: "{{ nginx_conf_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Nginx
+
+- name: Remove default NGINX configuration
+  file:
+    path: "{{ nginx_default_conf }}"
+    state: absent
+
+- name: Enable reverse proxy configuration
+  file:
+    src: "{{ nginx_conf_path }}"
+    dest: "{{ nginx_conf_link }}"
+    state: link
+  notify: Restart Nginx
+
+- name: Varidate NGINX configuration
+  command: nginx -t
+  changed_when: false
+  failed_when: false
+...

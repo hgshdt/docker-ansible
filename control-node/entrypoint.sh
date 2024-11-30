@@ -1,6 +1,6 @@
 #!/bin/bash
 
-node=(node01 node02)
+node=(node01 node02 proxy)
 port=22
 
 function setup_pubkey() {

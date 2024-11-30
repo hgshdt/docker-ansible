@@ -1,0 +1,4 @@
+---
+ansible_host: proxy
+ansible_port: 22
+...
