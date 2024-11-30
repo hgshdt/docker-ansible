@@ -120,6 +120,17 @@ The following example shows how to deploy Nginx on the target nodes using an Ans
 
 Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8001` and `http://localhost:8002`.
 
+### Example: Reverse proxy server
+
+The following example shows how to deploy Nginx reverse proxy using an Ansible playbook. 
+
+```bash
+# cd work
+# ansible-playbook -i inventory/dev/inventory.yml play_proxy.yml
+```
+
+Once the playbook has successfully run, Nginx reverse proxy should be accessible at `https://localhost`.
+
 ## Troubleshooting
 
 - If the nodes are unreachable, ensure the Docker containers are running by checking with `docker ps`.

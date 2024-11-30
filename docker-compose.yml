@@ -32,6 +32,7 @@ services:
     depends_on:
       - node01
       - node02
+      - proxy
     build:
       dockerfile: ./control-node/Dockerfile
       context: .
@@ -41,10 +42,16 @@ services:
     volumes:
       - ./work:/app/work
     networks:
-      mynet:
-        ipv4_address: 10.0.0.40
-    # extra_hosts:
-    #   - "ntp:10.0.1.40"
+      - mynet
+
+  proxy:
+    <<: *node
+    hostname: proxy
+    container_name: proxy
+    ports:
+      - '443:443'
+    networks:
+      - mynet
 
   node01:
     <<: *node
