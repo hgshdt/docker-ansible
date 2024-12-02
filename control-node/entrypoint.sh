@@ -20,7 +20,7 @@ function setup_sshd_config() {
 # function reload_sshd() {
 #     for i in ${node[@]} ;
 #     do
-#         sshpass -p 'node' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $i service sshd reload ;
+#         sshpass -p 'node' ssh -p "$port" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $i service sshd reload ;
 #     done
 # }
 

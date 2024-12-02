@@ -6,24 +6,8 @@ x-node: &node
   tty: true
   networks:
     - mynet
-  # extra_hosts:
-  #   - "ntp:10.0.1.40"
 
-services:
-  # ntp:
-  #   image: dockurr/chrony
-  #   container_name: ntp
-  #   environment:
-  #     NTP_SERVERS: "time.cloudflare.com"
-  #     ENABLE_SYSCLK: "true"
-  #   ports:
-  #     - 123:123/udp
-  #   cap_add:
-  #     - SYS_TIME
-  #   networks:
-  #     mynet:
-  #       ipv4_address: 10.0.1.40
-  
+services:  
   ansible:
     container_name: ansible
     hostname: ansible
@@ -42,7 +26,8 @@ services:
     volumes:
       - ./work:/app/work
     networks:
-      - mynet
+      mynet:
+        ipv4_address: 10.0.2.10
 
   proxy:
     <<: *node
@@ -51,7 +36,8 @@ services:
     ports:
       - '443:443'
     networks:
-      - mynet
+      mynet:
+        ipv4_address: 10.0.1.10
 
   node01:
     <<: *node
@@ -60,6 +46,9 @@ services:
     ports:
       - '8001:80'
       - '2201:22'
+    networks:
+      mynet:
+        ipv4_address: 10.0.0.2
 
   node02:
     <<: *node
@@ -68,6 +57,9 @@ services:
     ports:
       - '8002:80'
       - '2202:22'
+    networks:
+      mynet:
+        ipv4_address: 10.0.0.3
 
 networks:
   mynet:

@@ -15,6 +15,40 @@
     group: root
     mode: '0755'
 
+# - name: Generate OpenSSL SAN configuration
+#   template:
+#     src: templates/openssl_san.cnf.j2
+#     dest: "{{ nginx_cert_path }}/openssl_san.cnf"
+#     mode: '0644'
+
+# - name: Generate private key and self-signed certificate with SAN
+#   command: >
+#     openssl req -new -newkey rsa:2048 -days 365 -nodes -x509
+#     -config {{ nginx_cert_path }}/openssl_san.cnf
+#     -subj "/C=JP/ST=Tokyo/L=Tokyo/O=YourCompany/CN={{ inventory_hostname }}"
+#     -extensions v3_req
+#     -keyout {{ nginx_cert_path }}/nginx.key
+#     -out {{ nginx_cert_path }}/nginx.crt
+#   args:
+#     creates: "{{ nginx_cert_path }}/nginx.crt"
+#   notify: Restart Nginx
+
+# - name: Debug certificate paths
+#   debug:
+#     msg: 
+#       - "Certificate: {{ nginx_cert_path }}/nginx.crt"
+#       - "Private Key: {{ nginx_cert_path }}/nginx.key"
+
+# - name: Verify SAN
+#   shell: >
+#     openssl x509 -in {{ nginx_cert_path }}/nginx.crt -noout -text | grep -A1 "Subject Alternative Name"
+#   register: san_result
+#   failed_when: san_result.rc != 0
+
+# - name: Debug SAN
+#   debug:
+#     msg: "{{ san_result.stdout_lines }}"
+
 - name: Generate self-signed certificate
   command: >
     openssl req -new -newkey rsa:2048 -days 365 -nodes -x509
@@ -25,12 +59,17 @@
     creates: "{{ nginx_cert_path }}/nginx.crt"
   notify: Restart Nginx
 
+# - name: Collect backend node IP addresses
+#   set_fact:
+#     backend_ips: "{{ backend_ips | default([]) + [hostvars[item].ansible_facts.default_ipv4.address] }}"
+#   loop: "{{ backend_nodes }}"
+#   when: "'ansible_facts' in hostvars[item]"
+
 - name: Collect backend node IP addresses
   set_fact:
-    backend_ips: "{{ backend_ips | default([]) + [hostvars[item].ansible_facts.default_ipv4.address] }}"
+    backend_ips: "{{ backend_ips | default([]) + [backend_nodes_ips[item]] }}"
   loop: "{{ backend_nodes }}"
-  when: "'ansible_facts' in hostvars[item]"
-
+  
 - name: Debug backend IPs
   debug:
     var: backend_ips

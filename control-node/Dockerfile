@@ -24,9 +24,9 @@ RUN mkdir -p /root/.ssh \
     && cp -p /root/.ssh/id_ecdsa.pub /root/.ssh/authorized_keys
 
 RUN mkdir -p /etc/ansible
-ADD ./control-node/ansible.cfg /etc/ansible
+COPY ./control-node/ansible.cfg /etc/ansible
 
-ADD ./control-node/entrypoint.sh /entrypoint.sh
+COPY ./control-node/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 8999

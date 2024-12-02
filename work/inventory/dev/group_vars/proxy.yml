@@ -1,0 +1,12 @@
+backend_nodes:
+  - node01
+  - node02
+backend_nodes_ips:
+  node01: 10.0.0.2
+  node02: 10.0.0.3
+nginx_cert_path: /etc/nginx/ssl
+nginx_conf_path: /etc/nginx/sites-available/reverse_proxy
+nginx_conf_link: /etc/nginx/sites-enabled/reverse_proxy
+nginx_default_conf: /etc/nginx/sites-enabled/default
+ssl_protocols: "TLSv1.2 TLSv1.3"
+ssl_ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
