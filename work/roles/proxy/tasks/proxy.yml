@@ -15,55 +15,56 @@
     group: root
     mode: '0755'
 
-# - name: Generate OpenSSL SAN configuration
-#   template:
-#     src: templates/openssl_san.cnf.j2
-#     dest: "{{ nginx_cert_path }}/openssl_san.cnf"
-#     mode: '0644'
+- name: Generate a configuration file for the server CSR with SANs
+  template:
+    src: templates/localhost.cnf.j2
+    dest: "{{ nginx_cert_path }}/localhost.cnf"
+    mode: '0644'
 
-# - name: Generate private key and self-signed certificate with SAN
-#   command: >
-#     openssl req -new -newkey rsa:2048 -days 365 -nodes -x509
-#     -config {{ nginx_cert_path }}/openssl_san.cnf
-#     -subj "/C=JP/ST=Tokyo/L=Tokyo/O=YourCompany/CN={{ inventory_hostname }}"
-#     -extensions v3_req
-#     -keyout {{ nginx_cert_path }}/nginx.key
-#     -out {{ nginx_cert_path }}/nginx.crt
-#   args:
-#     creates: "{{ nginx_cert_path }}/nginx.crt"
-#   notify: Restart Nginx
-
-# - name: Debug certificate paths
-#   debug:
-#     msg: 
-#       - "Certificate: {{ nginx_cert_path }}/nginx.crt"
-#       - "Private Key: {{ nginx_cert_path }}/nginx.key"
-
-# - name: Verify SAN
-#   shell: >
-#     openssl x509 -in {{ nginx_cert_path }}/nginx.crt -noout -text | grep -A1 "Subject Alternative Name"
-#   register: san_result
-#   failed_when: san_result.rc != 0
-
-# - name: Debug SAN
-#   debug:
-#     msg: "{{ san_result.stdout_lines }}"
-
-- name: Generate self-signed certificate
-  command: >
-    openssl req -new -newkey rsa:2048 -days 365 -nodes -x509
-    -subj "/C=JP/ST=Tokyo/L=Tokyo/O=YourCompany/CN={{ inventory_hostname }}"
-    -keyout {{ nginx_cert_path }}/nginx.key
-    -out {{ nginx_cert_path }}/nginx.crt
+- name: Generate CA key
+  command: "openssl genrsa -out {{ nginx_cert_path }}/localCA.key 2048"
   args:
-    creates: "{{ nginx_cert_path }}/nginx.crt"
-  notify: Restart Nginx
+    creates: "{{ nginx_cert_path }}/localCA.key"
 
-# - name: Collect backend node IP addresses
-#   set_fact:
-#     backend_ips: "{{ backend_ips | default([]) + [hostvars[item].ansible_facts.default_ipv4.address] }}"
-#   loop: "{{ backend_nodes }}"
-#   when: "'ansible_facts' in hostvars[item]"
+- name: Generate CA certificate
+  command: >
+    openssl req -x509 -new -nodes
+    -key {{ nginx_cert_path }}/localCA.key
+    -sha256 -days 3650
+    -out {{ nginx_cert_path }}/localCA.crt
+    -subj "/C=JP/ST=Kanagawa/L=Yokohama/O=Ansible Testing Lab/CN=MyCA"
+  args:
+    creates: "{{ nginx_cert_path }}/localCA.crt"
+
+- name: Generate server key
+  command: "openssl genrsa -out {{ nginx_cert_path }}/localhost.key 2048"
+  args:
+    creates: "{{ nginx_cert_path }}/localhost.key"
+
+- name: Generate server CSR
+  command: >
+    openssl req -new 
+    -key {{ nginx_cert_path }}/localhost.key
+    -out {{ nginx_cert_path }}/localhost.csr
+    -config {{ nginx_cert_path }}/localhost.cnf
+    -subj "/C=JP/ST=Kanagawa/L=Yokohama/O=Ansible Testing Lab/CN=localhost"
+  args:
+    creates: "{{ nginx_cert_path }}/localhost.csr"
+
+- name: Sign the server CSR with the CA key and certificate
+  command: >
+    openssl x509 -req
+    -in {{ nginx_cert_path }}/localhost.csr
+    -CA {{ nginx_cert_path }}/localCA.crt
+    -CAkey {{ nginx_cert_path }}/localCA.key
+    -CAcreateserial
+    -out {{ nginx_cert_path }}/localhost.crt
+    -days 1825
+    -sha256
+    -extensions req_ext
+    -extfile {{ nginx_cert_path }}/localhost.cnf
+  args:
+    creates: "{{ nginx_cert_path }}/localhost.crt"
 
 - name: Collect backend node IP addresses
   set_fact:

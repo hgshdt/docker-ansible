@@ -1,0 +1,17 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+[req_distinguished_name]
+C = JP
+ST = Kanagawa
+L = Yokohama
+O = Ansible Testing Lab
+CN = localhost
+[req_ext]
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+DNS.2 = localhost.localdomain
+IP.1 = 127.0.0.1
+DNS.3 = app
+DNS.4 = app.localdomain
