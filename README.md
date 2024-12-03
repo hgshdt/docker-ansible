@@ -1,10 +1,11 @@
 # Dockerized Ansible Testing Lab for Playbook Development
 
-This repository provides a Docker-based environment to test Ansible playbooks and configurations. It sets up a simple Ansible control node and two target nodes using Docker and Docker Compose.
+This repository provides a Docker-based environment for testing Ansible playbooks and configurations. 
+It uses Docker and Docker Compose to set up a simple Ansible control node and several target nodes.
 
 ## Prerequisites
 
-Ensure you have Docker and Docker Compose installed on your system:
+Make sure you have Docker and Docker Compose installed on your system. You can verify their versions with the following commands:
 
 ```bash
 $ docker -v
@@ -23,11 +24,11 @@ To build the environment from scratch, run the following command:
 $ docker compose build --no-cache
 ```
 
-This will create the Ansible control node (`ansible`) and target nodes (`node01` and `node02`).
+This will create the Ansible control node named `ansible` and target nodes named `node01`, `node02`, and `proxy`.
 
 ### 2. Start the Docker Containers
 
-Once the build is complete, start the containers in detached mode:
+Once the build is complete, start the containers in detached mode (background):
 
 ```bash
 $ docker compose up -d
@@ -35,107 +36,102 @@ $ docker compose up -d
 
 ### 3. Verify Node Configuration
 
-To verify the configuration of `node01`, you can access it using the following command:
+To verify the configuration of `node01`, you can connect it using the following command:
 
-```bash
-$ docker exec -it node01 /bin/bash
-```
+1. Access `node01` with `docker exec`:
 
-```bash
-$ docker exec -it node01 netstat -tuln
-```
+    ```bash
+    $ docker exec -it node01 /bin/bash
+    ```
 
-On browser:
+2. Check network connections:
 
-```bash
-$ ssh root@node01
-```
+    ```bash
+    $ docker exec -it node01 netstat -tuln
+    ```
 
-From the node, check important files like SSH configuration, hosts, and authorized keys:
+3. Verify important files (SSH configuration, hosts, authorized keys) on the node:
 
-```bash
-root@node01:/# ps aux | grep sshd
-root@node01:/# cat /etc/ssh/sshd_config
-root@node01:/# cat /root/.ssh/authorized_keys
-```
+    ```bash
+    root@node01:/# ps aux | grep sshd
+    root@node01:/# cat /etc/ssh/sshd_config
+    root@node01:/# cat /root/.ssh/authorized_keys
+    ```
 
 ### 4. Run Ansible Commands
 
-Access the Ansible control node:
+Access the Ansible control node named `ansible` using:
 
 ```bash
 $ docker exec -it ansible /bin/bash
 ```
 
-The control node is also accessible via a web browser at `http://localhost:8990/`.
+The control node is also accessible through a web browser at `http://localhost:8990/`.
 
-Check the Ansible version installed:
-
-```bash
-ansible:~/work# ansible --version
-```
-
-You can now use Ansible to ping the target nodes and ensure they are reachable:
+Check the installed Ansible version:
 
 ```bash
-ansible:~/work# ansible node -m ping
+# ansible --version
 ```
 
-You should see successful pings from both `node01` and `node02`:
+Test if you can reach the target nodes by pinging them:
 
 ```bash
-node02 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3.12"
-    },
-    "changed": false,
-    "ping": "pong"
-}
-node01 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3.12"
-    },
-    "changed": false,
-    "ping": "pong"
-}
+# ansible node -m ping
 ```
+
+You should see successful ping responses from both `node01` and `node02`.
 
 ### 5. Execute a Playbook
 
-To run an Ansible playbook (e.g., `ping.yml`), use the following command:
+To run an Ansible playbook, navigate to the `work` directory and execute the following command:
 
 ```bash
 # cd work
 # ansible-playbook -i inventory/dev/inventory.yml play_check.yml
 ```
 
-### Example: Deploying Nginx
+### Examples
 
-The following example shows how to deploy Nginx on the target nodes using an Ansible playbook. 
+**Deploying Nginx:**
+
+Run the following command in the `work` directory to deploy Nginx on all target nodes using a playbook:
 
 ```bash
 # cd work
 # ansible-playbook -i inventory/dev/inventory.yml play_web.yml
 ```
 
-Once the playbook has successfully run, Nginx should be accessible at `http://localhost:8001` and `http://localhost:8002`.
+After successful execution, you should be able to access Nginx on `http://localhost:8001` and `http://localhost:8002`.
 
-### Example: Reverse proxy server
+**Deploying Nginx Reverse Proxy:**
 
-The following example shows how to deploy Nginx reverse proxy using an Ansible playbook. 
+Use this command in the `work` directory to deploy a reverse proxy server with Nginx using a playbook:
 
 ```bash
 # cd work
 # ansible-playbook -i inventory/dev/inventory.yml play_proxy.yml
 ```
 
-Once the playbook has successfully run, Nginx reverse proxy should be accessible at `https://localhost`.
+After successful execution, the reverse proxy should be accessible at `https://localhost`.
+
+**Windows Users:**
+
+On Windows, import the `localCA.crt` certificate from the `docker-ansible-proxy` container into the `Trusted Root Certification Authorities` store. You can access the certificate with:
+
+1. Use `docker cp` to copy the certificate from the container:
+
+    ```bash
+    # docker cp <docker-ansible-proxy container id>:/etc/nginx/ssl/localCA.crt ./
+    ```
+
+2. Open the Certificate Manager (press `Windows + R` and run `certlm.msc`).
 
 ## Troubleshooting
 
-- If the nodes are unreachable, ensure the Docker containers are running by checking with `docker ps`.
-- Ensure the network settings allow communication between the Ansible control node and the target nodes.
+- Check if the containers are running using `docker ps`.
+- Ensure the network configuration allows communication between the control node and target nodes.
 
 ## Conclusion
 
-This setup allows you to quickly create a testing environment for Ansible using Docker. You can modify the `Dockerfile` or `docker-compose.yml` as needed to customize the setup for your playbooks and environments.
+This setup provides a quick way to create a testing environment for Ansible with Docker. You can customize the environment by modifying the `Dockerfile` or `docker-compose.yml` files based on your specific playbooks and needs.
