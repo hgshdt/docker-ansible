@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 ENV ANSIBLE_PYTHON_INTERPRETER=auto_silent
 
 RUN apt update \
-    && apt install -y openssh-client ansible sshpass curl net-tools netcat-traditional \
+    && apt install -y openssh-client ansible sshpass curl net-tools netcat-traditional make node-gyp \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt install -y nodejs \
     && apt clean
